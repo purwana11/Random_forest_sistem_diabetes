@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Klinik Cerdas – Prediksi Diabetes (Random Forest)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container my-5">
+    <div class="card shadow-lg p-4 rounded-4">
+      <h1 class="text-center mb-3 text-primary">🩺 Klinik Cerdas</h1>
+      <h4 class="text-center text-muted mb-4">Prediksi Risiko Diabetes dengan Algoritma Random Forest</h4>
+
+      <form action="/predict" method="POST" id="predictForm">
+        <div class="row g-3">
+          {% for feature in ['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'] %}
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">{{ feature }}</label>
+            <input type="number" step="any" name="{{ feature }}" class="form-control" placeholder="{{ feature }}" required>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary px-4 py-2">Prediksi</button>
+          <button type="button" id="btnNoDiabetes" class="btn btn-success px-4 py-2 ms-2">Contoh Tidak Diabetes</button>
+          <button type="button" id="btnDiabetes" class="btn btn-danger px-4 py-2 ms-2">Contoh Diabetes</button>
+          <a href="/dataset" class="btn btn-secondary px-4 py-2 ms-2">Lihat Dataset</a>
+        </div>
+      </form>
+
+      <footer class="mt-4 text-center text-muted small">
+        <hr>
+        Akurasi Model: {{ accuracy * 100 }}% | AUC: {{ auc }} <br>
+        Algoritma: Random Forest Classifier
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // Tombol contoh data "Tidak Diabetes"
+    document.getElementById("btnNoDiabetes").addEventListener("click", function() {
+      const sampleNoDiabetes = [1, 90, 66, 23, 94, 28.1, 0.167, 21];
+      const fields = document.querySelectorAll("input");
+      fields.forEach((f, i) => f.value = sampleNoDiabetes[i]);
+    });
+
+    // Tombol contoh data "Diabetes"
+    document.getElementById("btnDiabetes").addEventListener("click", function() {
+      const sampleDiabetes = [8, 183, 64, 25, 120, 32.5, 0.672, 45];
+      const fields = document.querySelectorAll("input");
+      fields.forEach((f, i) => f.value = sampleDiabetes[i]);
+    });
+  </script>
+</body>
+</html>
